@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>AngularJS Performnce tester</title>
+  <script src="../vendor/lodash/2.0.0/lodash.js"></script>
+  <script src="../vendor/benchmark/1.0.0/benchmark.js"></script>
+  <script src="../vendor/angular/1.0.8/angular.js"></script>
+  <script src="../angularperf.js"></script>
+</head>
+<body>
+
+What is better to use: $observe on the expression or $watch with objectEquality = true. 
+
+<script>
+angularperf.
+
+test('observe', {
+	template: 
+		'<div ng-init="a={x: 5, y: 6, z: 122}" ng-controller="Ctrl1">'+
+		'<div observe="{{a}}"></div>'+
+		'</div>',
+	setup: function(app) {
+		app.controller('Ctrl1', function() {});
+		app.directive('observe', function() {
+			return {
+				restrict: 'A',
+				link: function(scope, elem, attrs) {
+					attrs.$observe('observe', function(value) {
+						console.log("observe: " + value)
+					});
+				}
+			}
+		});
+	},
+	test: ['$rootScope', function($rootScope) {
+		return function() {
+			$rootScope.$digest();
+		}
+	}]
+}).
+
+test('watch', {
+	template: 
+		'<div ng-init="a={x: 5, y: 6, z: 122}" ng-controller="Ctrl1">'+
+		'<div watch="a"></div>'+
+		'</div>',
+	setup: function(app) {
+		app.controller('Ctrl1', function() {});
+		app.directive('watch', function() {
+			return {
+				restrict: 'A',
+				link: function(scope, elem, attrs) {
+					scope.$watch(attrs.watch, function(value) {
+						console.log("watch: " + value)
+					}, true);
+				}
+			}
+		});
+	},
+	test: ['$rootScope', function($rootScope) {
+		return function() {
+			$rootScope.$digest();
+		}
+	}]
+}).
+
+run();
+
+</script>
+
+	
+</body>
+</html>
