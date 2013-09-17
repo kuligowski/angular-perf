@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>AngularJS Performnce tester</title>
+  <script src="../../vendor/lodash/2.0.0/lodash.js"></script>
+  <script src="../../vendor/benchmark/1.0.0/benchmark.js"></script>
+  <script src="../../vendor/LABjs/2.0.3/LAB.src.js"></script>
+  <script src="../../vendor/angular/1.0.8/angular.js"></script>
+  <script src="../../angularperf.js"></script>
+</head>
+<body>
+
+This example shows the way of loading external files with angular components and how to wire them with test applications.
+
+<script>
+
+angularperf.
+
+test('observe', {
+	load: [
+		'config-a.js',
+		'show-title.js',
+	],
+	template: '<div show-title></div>',
+	setup: function(app) {
+		app.requires = ['showTitle'];
+	},
+	test: ['$rootScope', function($rootScope) {
+		return function() {
+			$rootScope.$digest();
+		}
+	}]
+}).
+
+test('watch', {
+	load: [
+		'config-b.js',
+		'show-title.js',
+	],
+	template: '<div show-title></div>',
+	setup: function(app) {
+		app.requires = ['showTitle'];
+	},
+	test: ['$rootScope', function($rootScope) {
+		return function() {
+			$rootScope.$digest();
+		}
+	}]
+}).
+
+
+run();
+
+</script>
+
+	
+</body>
+</html>
