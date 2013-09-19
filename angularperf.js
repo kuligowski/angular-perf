@@ -4,26 +4,42 @@
 	var tests = [],
 		lab = $LAB.setOptions({AlwaysPreserveOrder:true});
 
-	var test = function(name, options) {
+	var createTestObj = function(name) {
+		return {
+			id: 'testCase'+tests.length,
+			name: String(name).
+				replace(/&/g, '&amp;').
+				replace(/</g, '&lt;').
+				replace(/>/g, '&gt;').
+				replace(/"/g, '&quot;')
+		}
+	},
+
+	normalizeName = function(name) {
+		return name;
+	},
+
+	test = function(name, options) {
 		
+		var testObj = createTestObj(name),
+			id = testObj.id;
+
 		if (options.load) {
 			for(var i = 0; i < options.load.length; i++)
 				lab = lab.script(options.load[i]);
 		}
 
 		lab.wait(function() {
-			var element = angular.element('<div id="'+name+'">'+((options.template) ? options.template : '') +'</div>');
+			var element = angular.element('<div id="'+testObj.id+'">'+((options.template) ? options.template : '') +'</div>');
 			document.body.appendChild(element[0]);
 
-			var app = angular.module(name, []);
+			var app = angular.module(id, []);
 			if (options.setup)
 				options.setup(app);
-			app.factory(name+'TestService', options.test);
-			var injector = angular.bootstrap(element, [name]);
-			tests.push({
-				name: name, 
-				fn: injector.get(name+'TestService')
-			});
+			app.factory(id+'TestService', options.test);
+			var injector = angular.bootstrap(element, [id]);
+			testObj.fn = injector.get(id+'TestService');
+			tests.push(testObj);
 		});
 
 		return angularperf;

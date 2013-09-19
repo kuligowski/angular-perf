@@ -16,7 +16,7 @@ What is better to use: $observe on the expression or $watch with objectEquality 
 <script>
 angularperf.
 
-test('observe', {
+test('$observe attribute', {
 	template: '<div ng-init="a=122" observe="{{a}}"></div>',
 	setup: function(app) {
 		app.directive('observe', function() {
@@ -35,7 +35,7 @@ test('observe', {
 	}]
 }).
 
-test('watch', {
+test('$watch some expression', {
 	template: '<div ng-init="a=122" watch="a"></div>',
 	setup: function(app) {
 		app.directive('watch', function() {
