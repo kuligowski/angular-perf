@@ -11,42 +11,26 @@
 </head>
 <body>
 
-What is better to use: angular forEach or native forEach or simple iteration. 
+What is better to use: angular lowercase or native lowercase method? 
 
 <script>
 
-var genArray = function() {
-	var len = 1000;
-		var arr = [];
-		while (len--)
-			arr[len] = len;
-	return arr;
-}
-
 angularperf.
 
-test('angularForEach', {
-	fn: function() {
-		var arr = genArray(), angular = window.angular;
+test('angular#lowercase', {
+	fn: ['$filter', function($filter) {
+		var lowercaseFilter = $filter('lowercase');
 		return function() {
-			angular.forEach(arr, function(item) {
-  				arr[item];
-			});
+			lowercaseFilter('aBcDfFg');
 		}
-	}
+	}]
 }).
 
-test('forLoop', {
+test('js#lowercase', {
 	fn: function() {
-		var arr = genArray();
-		return function() {
-			for (i = 0, len = arr.length; i < len; i++) {
-  				arr[i];
-			}
-		}
+		'aBcDfFg'.toLowerCase();
 	}
 }).
-
 
 run();
 

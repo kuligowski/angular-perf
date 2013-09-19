@@ -28,7 +28,7 @@ test('$observe attribute', {
 			}
 		});
 	},
-	test: ['$rootScope', function($rootScope) {
+	fn: ['$rootScope', function($rootScope) {
 		return function() {
 			$rootScope.$digest();
 		}
@@ -47,7 +47,7 @@ test('$watch some expression', {
 			}
 		});
 	},
-	test: ['$rootScope', function($rootScope) {
+	fn: ['$rootScope', function($rootScope) {
 		return function() {
 			$rootScope.$digest();
 		}

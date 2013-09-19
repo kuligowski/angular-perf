@@ -36,9 +36,31 @@
 			var app = angular.module(id, []);
 			if (options.setup)
 				options.setup(app);
-			app.factory(id+'TestService', options.test);
+
+
+			if (angular.isFunction(options.test))
+				options.test();
+
+			
+			var fn = options.fn, 
+				fnFactory = function() { return fn; }
+
+			if (angular.isArray(fn)) {
+				app.factory(id + 'TestService', fn);
+				fnFactory = function() { return injector.get(id + 'TestService'); }
+			} else {
+				if (angular.isFunction(fn)) {
+					var returnedFunction = fn();
+					if (angular.isFunction(returnedFunction))
+						fnFactory = function() { return returnedFunction; }
+				} else {
+					throw new Exception("Wrong test function or factory parameter");
+				}
+			}
+			
 			var injector = angular.bootstrap(element, [id]);
-			testObj.fn = injector.get(id+'TestService');
+
+			testObj.fn = fnFactory();
 			tests.push(testObj);
 		});
 
