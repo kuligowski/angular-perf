@@ -26,6 +26,7 @@ test('observe', {
 	setup: function(app) {
 		app.requires = ['showTitle'];
 	},
+	html: true,
 	fn: ['$rootScope', function($rootScope) {
 		return function() {
 			$rootScope.$digest();
@@ -42,6 +43,7 @@ test('watch', {
 	setup: function(app) {
 		app.requires = ['showTitle'];
 	},
+	html: true,
 	fn: ['$rootScope', function($rootScope) {
 		return function() {
 			$rootScope.$digest();

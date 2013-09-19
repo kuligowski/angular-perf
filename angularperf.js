@@ -15,10 +15,6 @@
 		}
 	},
 
-	normalizeName = function(name) {
-		return name;
-	},
-
 	test = function(name, options) {
 		
 		var testObj = createTestObj(name),
@@ -30,24 +26,14 @@
 		}
 
 		lab.wait(function() {
-			var element = angular.element('<div id="'+testObj.id+'">'+((options.template) ? options.template : '') +'</div>');
-			document.body.appendChild(element[0]);
 
-			var app = angular.module(id, []);
-			if (options.setup)
-				options.setup(app);
-
-
-			if (angular.isFunction(options.test))
-				options.test();
-
-			
-			var fn = options.fn, 
-				fnFactory = function() { return fn; }
+			var appModule = angular.module(id, []),
+				fn = options.fn, 
+				fnFactory = function() { return fn; }			
 
 			if (angular.isArray(fn)) {
-				app.factory(id + 'TestService', fn);
-				fnFactory = function() { return injector.get(id + 'TestService'); }
+				appModule.factory(id + 'TestService', fn);
+				fnFactory = function(injector) { return injector.get(id + 'TestService'); }
 			} else {
 				if (angular.isFunction(fn)) {
 					var returnedFunction = fn();
@@ -57,10 +43,18 @@
 					throw new Exception("Wrong test function or factory parameter");
 				}
 			}
-			
-			var injector = angular.bootstrap(element, [id]);
 
-			testObj.fn = fnFactory();
+			if (options.setup)
+				options.setup(appModule);
+
+			var appTemplate = options.template ? options.template : '',
+				appElement = angular.element('<div id="' + testObj.id + '">' + appTemplate + '</div>'),
+				appInjector = angular.bootstrap(appElement, [id]);
+
+			if (options.html)
+				document.body.appendChild(appElement[0]);
+
+			testObj.fn = fnFactory(appInjector);
 			tests.push(testObj);
 		});
 
