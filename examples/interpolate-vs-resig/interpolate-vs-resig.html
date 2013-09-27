@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>AngularJS Performnce tester</title>
+  <script src="../../vendor/lodash/2.0.0/lodash.js"></script>
+  <script src="../../vendor/benchmark/1.0.0/benchmark.js"></script>
+  <script src="../../vendor/LABjs/2.0.3/LAB.src.js"></script>
+  <script src="../../vendor/angular/1.0.8/angular.js"></script>
+  <script src="../../angularperf.js"></script>
+</head>
+<body>
+
+Simple templating performance: $interpolate vs resig simple templating vs mustache vs handlebars
+<br />
+This test is performed for rendering constant object.
+
+
+<script>
+
+angularperf.
+
+test('angular#template', {
+	fn: ['$interpolate', function($interpolate) {
+		var tpl = $interpolate('The first phrase is {{phrase1}} and the second is {{phrase2}} but number {{number1}}'),
+			obj = {
+				phrase1: 'first',
+				phrase2: 'second',
+				number1: 33
+			};
+		return function() {
+			tpl(obj);
+		}
+	}]
+}).
+
+test('resig#template', {
+	load: ['resig-tpl.js'],
+	fn: function() {
+		var tpl = tmpl('The first phrase is <%=phrase1%> and the second is <%=phrase2%> but number <%=number1%>'),
+			obj = {
+				phrase1: 'first',
+				phrase2: 'second',
+				number1: 33
+			};
+		return function() {
+			tpl(obj);
+		}
+	}
+}).
+
+test('mustache#template', {
+	load: ['mustache.js'],
+	fn: function() {		
+		var tpl = Mustache.compile('The first phrase is {{phrase1}} and the second is {{phrase2}} but number {{number1}}'),
+			obj = {
+				phrase1: 'first',
+				phrase2: 'second',
+				number1: 33
+			};
+		return function() {
+			tpl(obj);
+		}
+	}
+}).
+
+
+test('handlebars#template', {
+	load: ['handlebars.js'],
+	fn: function() {		
+		var tpl = Handlebars.compile('The first phrase is {{phrase1}} and the second is {{phrase2}} but number {{number1}}'),
+			obj = {
+				phrase1: 'first',
+				phrase2: 'second',
+				number1: 33
+			};
+		return function() {
+			tpl(obj);
+		}
+	}
+}).
+
+run();
+
+</script>
+
+	
+</body>
+</html>
